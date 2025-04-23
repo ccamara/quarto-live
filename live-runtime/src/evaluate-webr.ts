@@ -26,6 +26,8 @@ import {
 } from "./evaluate";
 import { arrayBufferToBase64, replaceScriptChildren } from './utils';
 
+import AnsiConvert from 'ansi-to-html';
+
 declare global {
   interface Window {
     HTMLWidgets?: {
@@ -262,10 +264,14 @@ export class WebREvaluator implements ExerciseEvaluator {
       sourceLines.length = 0;
     }
 
+    const ansi = new AnsiConvert({ escapeXML: true });
     const appendStdout = (content: string) => {
       const outputDiv = document.createElement("div");
       outputDiv.className = "exercise-cell-output cell-output cell-output-webr cell-output-stdout";
-      outputDiv.innerHTML = `<pre><code>${content}</code></pre>`;
+      outputDiv.innerHTML = "<pre><code></code></pre>";
+      const codeDiv = outputDiv.querySelector('code');
+      codeDiv.textContent = content;
+      codeDiv.innerHTML = ansi.toHtml(codeDiv.textContent);
 
       if (options.output) {
         appendSource();
@@ -274,13 +280,16 @@ export class WebREvaluator implements ExerciseEvaluator {
     }
 
     const appendStderr = (content: string) => {
-      const outputDiv = document.createElement("div");
-      outputDiv.className = "exercise-cell-output cell-output cell-output-webr cell-output-stderr";
-      outputDiv.innerHTML = `<pre><code>${content}</code></pre>`;
+      const errorDiv = document.createElement("div");
+      errorDiv.className = "exercise-cell-output cell-output cell-output-webr cell-output-stderr";
+      errorDiv.innerHTML = "<pre><code></code></pre>";
+      const codeDiv = errorDiv.querySelector('code');
+      codeDiv.textContent = content;
+      codeDiv.innerHTML = ansi.toHtml(codeDiv.textContent);
 
       if (options.output) {
         appendSource();
-        container.appendChild(outputDiv);
+        container.appendChild(errorDiv);
       }
     }
 
