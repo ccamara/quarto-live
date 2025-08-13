@@ -9,6 +9,7 @@ export type EvaluateValue = {
 export type OJSEvaluateElement = HTMLElement & { value?: EvaluateValue };
 
 export type EvaluateOptions = {
+  canvas: boolean;
   define?: string[];
   echo: boolean;
   envir: string;

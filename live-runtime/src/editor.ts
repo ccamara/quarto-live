@@ -20,6 +20,7 @@ export type OJSEditorElement = HTMLElement & { value?: EditorValue };
 
 type ExerciseOptions = EvaluateOptions & {
   autorun: boolean;
+  canvas: boolean;
   caption: string;
   completion: boolean;
   id: string,
@@ -108,6 +109,7 @@ abstract class ExerciseEditor {
     // Default editor options
     this.options = Object.assign({
       autorun: false,
+      canvas: true,
       completion: true,
       runbutton: true,
       startover: true,

@@ -13,6 +13,7 @@ The following code cell options can be used in `webr` or `pyodide` blocks, or se
 |--------|---------|-------------|
 | `autorun` | `false` | Evaluate initial code block contents automatically? |
 | `caption` | None | Heading text for code editor block. |
+| `canvas` | `true` | Use HTML canvas graphics? |
 | `completion` | `true` | Show code completion and suggestions in editor? |
 | `echo` | `false` | Show source code in output display? |
 | `edit` | `true` | Show the code editor? If `false`, a read-only code block is shown. |

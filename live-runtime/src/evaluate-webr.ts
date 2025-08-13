@@ -383,6 +383,7 @@ export class WebREvaluator implements ExerciseEvaluator {
         const imageDiv = document.createElement("img");
         outputDiv.className = "cell-output-display cell-output-pyodide";
         imageDiv.src = `data:${mime};base64, ${data}`;
+        imageDiv.style.maxWidth = "100%";
         outputDiv.appendChild(imageDiv);
         container.appendChild(outputDiv);
       }
@@ -426,18 +427,18 @@ export class WebREvaluator implements ExerciseEvaluator {
 
           // Plot image
           if (classes.includes('recordedplot')) {
-            let width = await this.webR.evalRNumber('72 * getOption("webr.fig.width")');
+            let width = await this.webR.evalRNumber('getOption("webr.fig.width")');
             if ("fig-width" in this.options) {
-              width = 72 * Number(this.options["fig-width"]);
+              width = Number(this.options["fig-width"]);
             }
-            let height = await this.webR.evalRNumber('72 * getOption("webr.fig.height")');
+            let height = await this.webR.evalRNumber('getOption("webr.fig.height")');
             if ("fig-height" in this.options) {
-              height = 72 * Number(this.options["fig-height"]);
+              height = Number(this.options["fig-height"]);
             }
 
-            if (typeof OffscreenCanvas !== "undefined") {
+            if (typeof OffscreenCanvas !== "undefined" && this.options.canvas) {
               const capturePlot = await shelter.captureR("replayPlot(plot)", {
-                captureGraphics: { width, height },
+                captureGraphics: { width: 72 * width, height: 72 * height },
                 env: { plot: result[i] },
               });
               appendImage(capturePlot.images[0]);
@@ -445,9 +446,12 @@ export class WebREvaluator implements ExerciseEvaluator {
               // Fallback to cairo graphics
               const data = await shelter.evalR(`
                 tmp_dir <- tempdir()
-                on.exit(unlink(tmp_dir, recursive = TRUE))
                 filename <- paste0(tmp_dir, ".webr-plot.png")
-                png(file = filename, width = width, height = height)
+                if (requireNamespace("ragg", quietly = TRUE)) {
+                  ragg::agg_png(file = filename, width = width, height = height, units = "in", res = 300)
+                } else {
+                  png(file = filename, width = width, height = height, units = "in", res = 300)
+                }
                 replayPlot(plot)
                 dev.off()
                 filesize <- file.info(filename)[["size"]]
@@ -507,7 +511,7 @@ export class WebREvaluator implements ExerciseEvaluator {
           const height = await this.webR.evalRNumber('72 * getOption("webr.fig.height")');
           let images: (ImageBitmap | HTMLImageElement)[] = [];
 
-          const hasOffscreenCanvas = typeof OffscreenCanvas !== "undefined";
+          const hasOffscreenCanvas = this.options.canvas && typeof OffscreenCanvas !== "undefined";
           if (!hasOffscreenCanvas) {
             // Fallback to cairo graphics
             this.webR.evalRVoid(`
