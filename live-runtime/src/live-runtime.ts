@@ -1,6 +1,6 @@
 import * as WebR from 'webr';
 import * as Comlink from 'comlink';
-import type { PyodideInterfaceWorker, PyodideWorker } from './pyodide-worker';
+import type { PyodideAPIWorker, PyodideWorker } from './pyodide-worker';
 import { WebRExerciseEditor, PyodideExerciseEditor } from './editor';
 import { highlightR, highlightPython, interpolate } from './highlighter';
 import { WebREvaluator } from './evaluate-webr';
@@ -30,10 +30,10 @@ async function setupR(webR: WebR.WebR, data: WebRInitData) {
   return await webR.evalRVoid(atob(require('./scripts/R/setup.R')));
 }
 
-async function setupPython(pyodide: PyodideInterfaceWorker) {
+async function setupPython(pyodide: PyodideAPIWorker) {
   await pyodide.runPythonAsync(atob(require('./scripts/Python/setup.py')))
   const matplotlib_display = atob(require('./scripts/Python/matplotlib_display.py'));
-  await pyodide.FS.mkdir('/pyodide');
+  await pyodide.FS.mkdirTree('/pyodide');
   await pyodide.FS.writeFile('/pyodide/matplotlib_display.py', matplotlib_display);
 }
 
@@ -46,6 +46,10 @@ async function startPyodideWorker(options) {
   Comlink.transferHandlers.set("Comlink", comlinkTransfer);
   Comlink.transferHandlers.set("ImageBitmap", imageBitmapTransfer);
   Comlink.transferHandlers.set("Map", mapTransfer);
+
+  // See pyodide-worker.ts
+  Comlink.transferHandlers.delete("throw");
+
   return pyodide;
 }
 

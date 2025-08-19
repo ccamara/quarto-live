@@ -9,7 +9,7 @@ import {
   OJSEvaluateElement,
   EvaluateValue,
 } from "./evaluate";
-import { PyodideInterfaceWorker } from './pyodide-worker';
+import { PyodideAPIWorker } from './pyodide-worker';
 import { loadScriptAsync, replaceScriptChildren, b64Decode } from './utils';
 
 import AnsiConvert from 'ansi-to-html';
@@ -31,9 +31,9 @@ export class PyodideEvaluator implements ExerciseEvaluator {
   context: EvaluateContext;
   options: EvaluateOptions;
   envManager: EnvironmentManager<PyodideEnvironment>;
-  pyodide: PyodideInterfaceWorker;
+  pyodide: PyodideAPIWorker;
   nullResult: EvaluateValue;
-  constructor(pyodide: PyodideInterfaceWorker, context: EvaluateContext) {
+  constructor(pyodide: PyodideAPIWorker, context: EvaluateContext) {
     this.container = this.newContainer();
     this.nullResult = { result: null, evaluate_result: null, evaluator: this };
     this.container.value = this.nullResult;

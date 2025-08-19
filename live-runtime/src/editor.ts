@@ -1,5 +1,5 @@
 import type { WebR, RFunction } from 'webr';
-import type { PyodideInterface } from 'pyodide';
+import type { PyodideAPI } from 'pyodide';
 import type { EvaluateOptions } from './evaluate';
 import { Indicator } from './indicator';
 import { basicSetup } from 'codemirror';
@@ -524,9 +524,9 @@ export class WebRExerciseEditor extends ExerciseEditor {
 }
 
 export class PyodideExerciseEditor extends ExerciseEditor {
-  pyodidePromise: Promise<PyodideInterface>;
+  pyodidePromise: Promise<PyodideAPI>;
   defaultCaption: string;
-  constructor(pyodidePromise: Promise<PyodideInterface>, code: string, options: ExerciseOptions) {
+  constructor(pyodidePromise: Promise<PyodideAPI>, code: string, options: ExerciseOptions) {
     super(code, options);
     this.pyodidePromise = pyodidePromise;
   }

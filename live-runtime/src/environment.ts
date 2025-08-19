@@ -1,4 +1,4 @@
-import { PyodideInterface } from 'pyodide';
+import { PyodideAPI } from 'pyodide';
 import { PyProxy } from 'pyodide/ffi';
 import { isRObject } from 'webr';
 import type { REnvironment, RObject, Shelter, WebR } from 'webr';
@@ -189,15 +189,15 @@ export class WebREnvironment {
 
 export class PyodideEnvironment {
   static #instance: PyodideEnvironment;
-  pyodide: PyodideInterface;
+  pyodide: PyodideAPI;
   env: { [key: string]: Promise<PyProxy>} = {};
 
-  private constructor(pyodide: PyodideInterface) {
+  private constructor(pyodide: PyodideAPI) {
     this.pyodide = pyodide;
     this.env.global = Promise.resolve().then(() => pyodide.toPy({}));
   }
 
-  static instance(pyodide: PyodideInterface): PyodideEnvironment {
+  static instance(pyodide: PyodideAPI): PyodideEnvironment {
     if (!PyodideEnvironment.#instance) {
       PyodideEnvironment.#instance = new PyodideEnvironment(pyodide);
     }

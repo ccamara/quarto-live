@@ -1,14 +1,14 @@
 import { PyodideEvaluator } from './evaluate-pyodide';
 import { EnvironmentManager, PyodideEnvironment } from './environment';
 import { Indicator } from './indicator';
-import { PyodideInterface } from 'pyodide';
+import { PyodideAPI } from 'pyodide';
 import { PyProxy } from 'pyodide/ffi';
 import { ExerciseGrader } from './grader';
 
 export class PyodideGrader extends ExerciseGrader {
   evaluator: PyodideEvaluator;
   envManager: EnvironmentManager<PyodideEnvironment>;
-  pyodide: PyodideInterface;
+  pyodide: PyodideAPI;
 
   constructor(evaluator: PyodideEvaluator) {
     super(evaluator);
