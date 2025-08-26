@@ -1,4 +1,4 @@
-# Quarto Live Fork
+# Quarto Live (Fork)
 
 This extension embeds WebAssembly powered code blocks and exercises for both the R and Python languages into [Quarto](https://quarto.org) documents using HTML-based output formats. The [webR](https://docs.r-wasm.org/webr/latest/) and [Pyodide](https://pyodide.org/en/stable/) WebAssembly engines are used to dynamically execute code in the user's web browser, so only a static web service (such as [GitHub Pages](https://pages.github.com), [Quarto Pub](https://quartopub.com), or [Netlify](https://www.netlify.com)) is required.
 
